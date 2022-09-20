@@ -25,7 +25,7 @@ class App extends Component {
         {/* Render the passwords if we have them */}
         {passwords.length ? (
           <div>
-            <h1>5 Passwords.</h1>
+            <h1>Animals</h1>
             <ul className="passwords">
               {/*
                 Generally it's bad to use "index" as a key.
@@ -42,7 +42,7 @@ class App extends Component {
             <button
               className="more"
               onClick={this.getPasswords}>
-              Get More
+              reload
             </button>
           </div>
         ) : (
