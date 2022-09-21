@@ -1,64 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from "react";
 import './App.css';
 
-class App extends Component {
+function App() {
   // Initialize state
-  state = { passwords: [] }
+const [animals, setAnimals] = useState([]);
 
-  // Fetch passwords after first mount
-  componentDidMount() {
-    this.getPasswords();
-  }
+  const getAnimals = async () => {
+  try {
+    const res = await fetch("http://localhost:8080/api/animals/mammals");
+    console.log("pulling animals")
+    return await res.json();
+  } catch (err) {}
+};
 
-  getPasswords = () => {
-    // Get the passwords and store them in state
-    fetch('/api/animals/mammals')
-      .then(res => res.json())
-      .then(passwords => this.setState({ passwords }));
-  }
 
-  render() {
-    const { passwords } = this.state;
+  const loadAnimals = () => {
+    getAnimals() // api function
+      .then((res) => setAnimals(res))
+      .catch((err) => console.log(err));
+  };
 
-    return (
-      <div className="App">
-        {/* Render the passwords if we have them */}
-        {passwords.length ? (
-          <div>
-            <h1>Animals</h1>
-            <ul className="passwords">
-              {/*
-                Generally it's bad to use "index" as a key.
-                It's ok for this example because there will always
-                be the same number of passwords, and they never
-                change positions in the array.
-              */}
-              {passwords.map((password, index) =>
-                <li key={index}>
-                  {password}
-                </li>
-              )}
-            </ul>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              reload
-            </button>
-          </div>
-        ) : (
-          // Render a helpful message otherwise
-          <div>
-            <h1>No passwords :(</h1>
-            <button
-              className="more"
-              onClick={this.getPasswords}>
-              Try Again?
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
+
+  useEffect(() => {
+    loadAnimals();
+  }, []); // this is the dependancy array. [] means it will run once when the page opens
+
+
+  // const animals = [
+  // "wolf",
+  // "fox"  
+  // ]
+
+  return (
+    <h1>{animals}</h1>
+
+  )
 }
+
 
 export default App;
