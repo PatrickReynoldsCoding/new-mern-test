@@ -1,8 +1,29 @@
 const express = require('express');
 const path = require('path');
-const generatePassword = require('password-generator');
+const { json, urlencoded } = express;
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
+
+// db
+mongoose
+  .connect(process.env.MONGO_URI, {
+    // connects to your .env file and loads the MONGO_URI value
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('DB CONNECTED'))
+  .catch((err) => console.log('DB CONNECTION ERROR', err));
+
+// middleware
+app.use(morgan('dev')); //logs requests. helps with debugging
+app.use(json());
+app.use(urlencoded({ extended: false }));
+app.use(cors({ origin: true, credentials: true })); //communicating between front and back end
+
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
